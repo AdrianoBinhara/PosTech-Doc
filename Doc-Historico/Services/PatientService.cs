@@ -2,7 +2,6 @@
 using Doc_Historico.Helpers;
 using Doc_Historico.Interfaces;
 using Doc_Historico.Models;
-using Xamarin.Google.Crypto.Tink.Shaded.Protobuf;
 
 namespace Doc_Historico.Services
 {
@@ -14,32 +13,53 @@ namespace Doc_Historico.Services
             _requestProvider = requestProvider;
 		}
 
-        public Task<Patient> ChangePatientInfo(Patient patient)
+        public async Task<Patient> ChangePatientInfo(Patient patient)
         {
-            throw new NotImplementedException();
+            UriBuilder builder = new UriBuilder(BaseUri.Instance.GetPatientsUri);
+            string uri = builder.ToString();
+            var result = await _requestProvider.PutAsync<Patient>(uri, patient);
+            return result;
         }
 
-        public Task<Patient> CreatePatient(Patient patient)
+        public async Task<Patient> CreatePatient(Patient patient)
         {
-            throw new NotImplementedException();
+            UriBuilder builder = new UriBuilder(BaseUri.Instance.GetPatientsUri);
+            string uri = builder.ToString();
+            var result = await _requestProvider.PostAsync<Patient>(uri, patient);
+            return result;
+
         }
 
-        public Task DeletePatient(string id)
+        public async Task DeletePatient(string id)
         {
-            throw new NotImplementedException();
+            UriBuilder builder = new(BaseUri.Instance.GetPatientsUri);
+            builder.Path += $"/{id}";
+            string uri = builder.ToString();
+            await _requestProvider.DeleteAsync(uri);
         }
 
-        public Task<Patient> GetPatientById(string id)
+        public async Task<Patient> GetPatientById(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                UriBuilder builder = new UriBuilder(BaseUri.Instance.GetPatientsUri);
+                builder.Path += $"/{id}";
+                string uri = builder.ToString();
+                var list = await _requestProvider.GetAsync<Patient>(uri);
+                return list;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
         }
 
         public async Task<List<Patient>> GetPatientList()
         {
             try
             {
-                UriBuilder builder = new UriBuilder(BaseUri.Instance.Uri);
-                builder.Path = "/Patient";
+                UriBuilder builder = new UriBuilder(BaseUri.Instance.GetPatientsUri);
                 string uri = builder.ToString();
                 var list = await _requestProvider.GetAsync<List<Patient>>(uri);
                 return list;

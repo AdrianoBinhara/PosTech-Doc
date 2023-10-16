@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http.Headers;
 using Doc_Historico.Interfaces;
+using Doc_Historico.Models;
 using Newtonsoft.Json;
 
 namespace Doc_Historico.Services
@@ -9,16 +10,6 @@ namespace Doc_Historico.Services
     {
         public RequestProvider()
         {
-        }
-
-        public async Task<TResult> GetAsync<TResult>(string uri)
-        {
-            HttpClient httpClient = GetOrCreateHttpClient();
-            HttpResponseMessage response = await httpClient.GetAsync(uri);
-            await HandleResponse(response);
-            string serialized = await response.Content.ReadAsStringAsync();
-            TResult result = JsonConvert.DeserializeObject<TResult>(serialized);
-            return result;
         }
 
         private async Task HandleResponse(HttpResponseMessage response)
@@ -50,6 +41,54 @@ namespace Doc_Historico.Services
             
                 httpClient.DefaultRequestHeaders.Authorization = null;
             return httpClient;
+        }
+
+        public async Task<TResult> GetAsync<TResult>(string uri)
+        {
+            HttpClient httpClient = GetOrCreateHttpClient();
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
+            await HandleResponse(response);
+            string serialized = await response.Content.ReadAsStringAsync();
+            TResult result = JsonConvert.DeserializeObject<TResult>(serialized);
+            return result;
+        }
+
+        public async Task DeleteAsync(string uri)
+        {
+            HttpClient httpClient = GetOrCreateHttpClient();
+            var result =await httpClient.DeleteAsync(uri);
+        }
+
+        public async Task<TResult> PostAsync<TResult>(string uri, Patient patient)
+        {
+            HttpClient httpClient = GetOrCreateHttpClient();
+
+            var content = new StringContent(JsonConvert.SerializeObject(patient));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            HttpResponseMessage response = await httpClient.PostAsync(uri, content);
+            await HandleResponse(response);
+
+            string serialized = await response.Content.ReadAsStringAsync();
+
+            TResult result = JsonConvert.DeserializeObject<TResult>(serialized);
+            return result;
+        }
+
+        public async Task<TResult> PutAsync<TResult>(string uri, Patient patient)
+        {
+            HttpClient httpClient = GetOrCreateHttpClient();
+
+            var content = new StringContent(JsonConvert.SerializeObject(patient));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            HttpResponseMessage response = await httpClient.PostAsync(uri, content);
+            await HandleResponse(response);
+
+            string serialized = await response.Content.ReadAsStringAsync();
+
+            TResult result = JsonConvert.DeserializeObject<TResult>(serialized);
+            return result;
         }
     }
  }

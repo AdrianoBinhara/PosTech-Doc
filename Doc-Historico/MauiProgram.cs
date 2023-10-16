@@ -1,4 +1,6 @@
-﻿using Doc_Historico.Interfaces;
+﻿using CommunityToolkit.Maui;
+using Doc_Historico.Handlers;
+using Doc_Historico.Interfaces;
 using Doc_Historico.Services;
 using Microsoft.Extensions.Logging;
 
@@ -14,14 +16,27 @@ public static class MauiProgram
             .RegisterAppServices()
             .RegisterViewModels()
 			.RegisterViews()
+			.UseMauiCommunityToolkit()
+
+            .ConfigureMauiHandlers(handlers =>
+			{
+				FormHandler.RemoverBorders();	
+			})
             .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
+        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(nameof(Entry), (handler, view) =>
+        {
+#if ANDROID
+            handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+#endif
+        });
+
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
 		return builder.Build();
