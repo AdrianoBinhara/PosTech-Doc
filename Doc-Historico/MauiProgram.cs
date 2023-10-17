@@ -44,11 +44,14 @@ public static class MauiProgram
 	public static MauiAppBuilder RegisterViewModels(this MauiAppBuilder mauiAppBuilder)
 	{
 		mauiAppBuilder.Services.AddSingleton<ViewModels.PatientListViewModel>();
-		return mauiAppBuilder;
+        mauiAppBuilder.Services.AddSingleton<ViewModels.PatientDetailViewModel>();
+
+        return mauiAppBuilder;
 	}
     public static MauiAppBuilder RegisterAppServices(this MauiAppBuilder mauiAppBuilder)
     {
-        mauiAppBuilder.Services.AddSingleton<IRequestProvider, RequestProvider>();
+        mauiAppBuilder.Services.AddSingleton<INavigationService, NavigationService>();
+		mauiAppBuilder.Services.AddSingleton<IRequestProvider, RequestProvider>();
         mauiAppBuilder.Services.AddSingleton<IPatient, PatientService>();
         mauiAppBuilder.Services.AddSingleton<IMedicalHistory, MedicalHistoryService>();
 		return mauiAppBuilder;
@@ -56,6 +59,8 @@ public static class MauiProgram
 	public static MauiAppBuilder RegisterViews(this MauiAppBuilder mauiAppBuilder)
 	{
 		mauiAppBuilder.Services.AddSingleton<Views.PatientListPage>();
-		return mauiAppBuilder;
+        mauiAppBuilder.Services.AddSingleton<Views.PatientDetailPage>();
+
+        return mauiAppBuilder;
 	}
 }

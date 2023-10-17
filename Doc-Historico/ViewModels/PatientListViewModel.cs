@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Doc_Historico.Interfaces;
 using Doc_Historico.Models;
+using Doc_Historico.Views;
 
 namespace Doc_Historico.ViewModels
 {
@@ -26,13 +27,36 @@ namespace Doc_Historico.ViewModels
                     FilterPatients();
             }
         }
+        private Patient _selectedPatient;
+        public Patient SelectedPatient
+        {
+            get { return _selectedPatient; }
+            set
+            {
+                if(SetProperty(ref _selectedPatient, value)&& value != null)
+                {
+                    NavigateToPatientDetail(value);
+                    SelectedPatient = null;
+                }
+            }
+        }
 
-        public PatientListViewModel(IPatient patient)
+        public PatientListViewModel(INavigationService navigationService,IPatient patient):base (navigationService)
         {
             _patient = patient;
+            _navigationService = navigationService;
             Task.Run(GetPatientsExecute);
             RefreshCommand = new Command(async () => await GetPatientsExecute());
             DeletePatient = new Command<Patient>(async (patient) => await DeletePatientExecute(patient));
+        }
+     
+        private async void NavigateToPatientDetail(Patient patient)
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                { "Patient", patient }
+            };
+            await _navigationService.NavigateToAsync(nameof(PatientDetailPage), parameters);
         }
 
         public void FilterPatients()

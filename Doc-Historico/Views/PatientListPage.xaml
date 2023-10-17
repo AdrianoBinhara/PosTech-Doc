@@ -17,23 +17,23 @@
         <VerticalStackLayout Padding="10">
 
             <Label
-            Text="Pacientes"
-            FontAttributes="Bold"
-            HorizontalOptions="Center"
-            FontSize="Title"/>
+                Text="Pacientes"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                FontSize="Title"/>
             <Frame
-            BackgroundColor="#F5F5F5"
-            BorderColor="Transparent"
+                BackgroundColor="#F5F5F5"
+                BorderColor="Transparent"
                 HeightRequest="40"
-            CornerRadius="15"
-            Margin="0,10"
-            Padding="0">
+                CornerRadius="15"
+                Margin="0,10"
+                Padding="0">
                 <Grid ColumnDefinitions="Auto, *">
                     <Image
-                    Margin="5,0,5,0"
-                    WidthRequest="25"
-                    HeightRequest="25"
-                    Source="search.png"/>
+                        Margin="5,0,5,0"
+                        WidthRequest="25"
+                        HeightRequest="25"
+                        Source="search.png"/>
                     <Entry
                         Text="{Binding SearchText}" Placeholder="Buscar paciente..."
                         Grid.Column="1"
@@ -45,8 +45,10 @@
 
             </Frame>
             <CollectionView
-            x:Name="listView"
-            ItemsSource="{Binding PatientList}">
+                x:Name="listView"
+                ItemsSource="{Binding PatientList}"
+                SelectedItem="{Binding SelectedPatient}"
+                SelectionMode="Single">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
                 </CollectionView.ItemsLayout>
@@ -64,20 +66,24 @@
 
                             </SwipeView.RightItems>
                             <VerticalStackLayout BackgroundColor="White">
-                            <Label Text="{Binding nome}"
-                           TextColor="Black"/>
-                            <Label Text="{Binding email}"
-                           TextColor="Black"/>
-                            <Label Text="{Binding dataNascimento}"
-                           TextColor="Black"/>
-                            <Label Text="{Binding responsavel}"
-                           TextColor="Black"/>
+                            <Label
+                                Text="{Binding nome}"
+                                TextColor="Black"/>
+                            <Label
+                                Text="{Binding email}"
+                                TextColor="Black"/>
+                            <Label
+                                Text="{Binding dataNascimento}"
+                                TextColor="Black"/>
+                            <Label
+                                Text="{Binding responsavel}"
+                                TextColor="Black"/>
                             <BoxView
-                            HeightRequest="1"
-                            Margin="0,5,0,0"
-                            Color="#d1d1d1"
-                            VerticalOptions="EndAndExpand"
-                            IsVisible="{Binding .,Converter={StaticResource separatorVisibilityConverter}, ConverterParameter={x:Reference Name=listView}}"/>
+                                HeightRequest="1"
+                                Margin="0,5,0,0"
+                                Color="#d1d1d1"
+                                VerticalOptions="EndAndExpand"
+                                IsVisible="{Binding .,Converter={StaticResource separatorVisibilityConverter}, ConverterParameter={x:Reference Name=listView}}"/>
                         </VerticalStackLayout>
 
                         </SwipeView>

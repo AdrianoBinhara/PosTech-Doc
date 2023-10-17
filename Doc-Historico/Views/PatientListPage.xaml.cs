@@ -7,7 +7,8 @@ public partial class PatientListPage : ContentPage
 	public PatientListPage(PatientListViewModel viewModel)
 	{
 		BindingContext = viewModel;
-		InitializeComponent();
+        InitializeComponent();
+
 	}
 
 	
