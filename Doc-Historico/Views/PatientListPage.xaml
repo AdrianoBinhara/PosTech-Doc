@@ -35,10 +35,11 @@
                     HeightRequest="25"
                     Source="search.png"/>
                     <Entry
-                    Grid.Column="1"
-                    PlaceholderColor="Transparent"
-                    BackgroundColor="Transparent"
-                    HorizontalOptions="FillAndExpand" />
+                        Text="{Binding SearchText}" Placeholder="Buscar paciente..."
+                        Grid.Column="1"
+                        PlaceholderColor="Transparent"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="FillAndExpand" />
 
                 </Grid>
 
