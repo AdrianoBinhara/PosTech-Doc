@@ -45,12 +45,12 @@ namespace Doc_Historico.ViewModels
         {
             _patient = patient;
             _navigationService = navigationService;
-            Task.Run(GetPatientsExecute);
             RefreshCommand = new Command(async () => await GetPatientsExecute());
             DeletePatient = new Command<Patient>(async (patient) => await DeletePatientExecute(patient));
+            NavigateToAddPatient = new Command(() => NavigateToPatientDetail());
         }
      
-        private async void NavigateToPatientDetail(Patient patient)
+        private async void NavigateToPatientDetail(Patient patient = null)
         {
             var parameters = new Dictionary<string, object>
             {
@@ -82,7 +82,7 @@ namespace Doc_Historico.ViewModels
             RefreshCommand.Execute(null);
         }
 
-        private async Task GetPatientsExecute()
+        public async Task GetPatientsExecute()
         {
             IsBusy = true;
             _allPatients = new ObservableCollection<Patient>(await _patient.GetPatientList());
@@ -90,9 +90,11 @@ namespace Doc_Historico.ViewModels
             IsBusy = false;
         }
 
+
         public ICommand DeletePatient { private set; get; }
         public ICommand RefreshCommand { private set; get; }
         public ICommand GetPatients { private set; get; }
+        public ICommand NavigateToAddPatient { get; private set; }
 
     }
 }

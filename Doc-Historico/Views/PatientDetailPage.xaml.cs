@@ -9,4 +9,14 @@ public partial class PatientDetailPage : ContentPage
 		BindingContext = viewModel;
 		InitializeComponent();
 	}
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+
+        if (BindingContext is PatientDetailViewModel viewModel)
+        {
+            viewModel.ResetProperties();
+        }
+    }
+
 }

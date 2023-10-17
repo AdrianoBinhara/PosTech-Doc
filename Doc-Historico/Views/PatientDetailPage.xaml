@@ -2,11 +2,51 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Doc_Historico.Views.PatientDetailPage"
-             Title="PatientDetailPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             
+             Title="{Binding Title}">
+    <StackLayout Spacing="10" Padding="10">
+        <Frame
+            Padding="5,0,5,0"
+            BackgroundColor="#e9e9e9"
+            BorderColor="Transparent"
+            CornerRadius="10">
+            <Entry
+                PlaceholderColor="#999999"
+                Placeholder="Nome"
+                Text="{Binding Nome}"/>
+        </Frame>
+         <Frame
+            Padding="5,0,5,0"
+            BackgroundColor="#e9e9e9"
+            BorderColor="Transparent"
+            CornerRadius="10">
+            <Entry
+                PlaceholderColor="#999999"
+                Placeholder="Email"
+                Text="{Binding Email}"/>
+         </Frame>
+         <Frame
+            Padding="5,0,5,0"
+            BackgroundColor="#e9e9e9"
+            BorderColor="Transparent"
+            CornerRadius="10">
+            <Entry
+                PlaceholderColor="#999999"
+                Placeholder="Responsável"
+                Text="{Binding Responsavel}"/>
+         </Frame>
+         <Frame
+            Padding="5,0,5,0"
+            BackgroundColor="#e9e9e9"
+            BorderColor="Transparent"
+            CornerRadius="10">
+            <DatePicker Date="{Binding DataNascimento}" Format="dd/MM/yyyy"/>
+         </Frame>
+        <Button
+            Text="Confirmar"
+            Command="{Binding ConfirmButton}"
+            FontAttributes="Bold"
+            VerticalOptions="EndAndExpand"/>
+    </StackLayout>
 </ContentPage>
+    

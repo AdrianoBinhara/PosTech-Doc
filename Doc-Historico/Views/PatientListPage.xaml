@@ -16,11 +16,27 @@
         IsRefreshing="{Binding IsBusy}">
         <VerticalStackLayout Padding="10">
 
-            <Label
-                Text="Pacientes"
-                FontAttributes="Bold"
-                HorizontalOptions="Center"
-                FontSize="Title"/>
+            <Grid ColumnDefinitions="*,*">
+                <Label
+                    Grid.ColumnSpan="2"
+                    Text="Pacientes"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center"
+                    FontSize="Title"/>
+                <Button
+                    Grid.Column="1"
+                    Text="+"
+                    BackgroundColor="Transparent"
+                    FontAttributes="Bold"
+                    TextColor="Black"
+                    HeightRequest="10"
+                    VerticalOptions="Center"
+                    HorizontalOptions="End"
+                    FontSize="Title"
+                    Command="{Binding NavigateToAddPatient}"/>
+
+            </Grid>
+            
             <Frame
                 BackgroundColor="#F5F5F5"
                 BorderColor="Transparent"
@@ -66,17 +82,26 @@
 
                             </SwipeView.RightItems>
                             <VerticalStackLayout BackgroundColor="White">
-                            <Label
-                                Text="{Binding nome}"
-                                TextColor="Black"/>
+                                <StackLayout Orientation="Horizontal">
+
+                                    <Label
+                                        Text="{Binding nome}"
+                                        FontAttributes="Bold"
+                                        FontSize="Header"
+                                        HorizontalOptions="StartAndExpand"
+                                        TextColor="Black"/>
+                                    <Label
+                                        Text="{Binding dataNascimento, StringFormat='Nasc: {0:dd/MM/yy}'}"
+                                        FontAttributes="Bold"
+                                        VerticalTextAlignment="Center"
+                                        TextColor="Black"/>
+
+                                </StackLayout>
                             <Label
                                 Text="{Binding email}"
-                                TextColor="Black"/>
+                                TextColor="#999999"/>
                             <Label
-                                Text="{Binding dataNascimento}"
-                                TextColor="Black"/>
-                            <Label
-                                Text="{Binding responsavel}"
+                                Text="{Binding responsavel, StringFormat='Responsável: {0}'}"
                                 TextColor="Black"/>
                             <BoxView
                                 HeightRequest="1"

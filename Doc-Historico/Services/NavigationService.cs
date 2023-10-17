@@ -7,11 +7,6 @@ namespace Doc_Historico.Services
 {
     public class NavigationService : INavigationService
     {
-        public Task GoBackAsync()
-        {
-            return Shell.Current.Navigation.PopAsync();
-        }
-
         public Task InitializeAsync()
         {
             return NavigateToAsync($"//{nameof(PatientListPage)}");
@@ -27,8 +22,7 @@ namespace Doc_Historico.Services
 
         public Task PopAsync()
         {
-
-            Shell.Current
+            return Shell.Current.Navigation.PopAsync();
         }
     }
 

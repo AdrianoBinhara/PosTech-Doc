@@ -8,8 +8,15 @@ public partial class PatientListPage : ContentPage
 	{
 		BindingContext = viewModel;
         InitializeComponent();
+    }
+   
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        var viewModel = BindingContext as PatientListViewModel;
+        if (viewModel != null)
+            await viewModel.GetPatientsExecute();
+    }
 
-	}
 
-	
 }
