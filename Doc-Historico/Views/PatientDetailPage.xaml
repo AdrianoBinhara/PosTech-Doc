@@ -2,95 +2,116 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Doc_Historico.Views.PatientDetailPage"
-             
+             x:Name="DetailPage"
              Title="{Binding Title}">
-    <StackLayout Spacing="10" Padding="10">
-        <Frame
-            Padding="5,0,5,0"
-            BackgroundColor="#e9e9e9"
-            BorderColor="Transparent"
-            CornerRadius="10">
-            <Entry
-                PlaceholderColor="#999999"
-                Placeholder="Nome"
-                Text="{Binding Nome}"/>
-        </Frame>
-         <Frame
-            Padding="5,0,5,0"
-            BackgroundColor="#e9e9e9"
-            BorderColor="Transparent"
-            CornerRadius="10">
-            <Entry
-                PlaceholderColor="#999999"
-                Placeholder="Email"
-                Text="{Binding Email}"/>
-         </Frame>
-         <Frame
-            Padding="5,0,5,0"
-            BackgroundColor="#e9e9e9"
-            BorderColor="Transparent"
-            CornerRadius="10">
-            <Entry
-                PlaceholderColor="#999999"
-                Placeholder="Responsável"
-                Text="{Binding Responsavel}"/>
-         </Frame>
-         <Frame
-            Padding="5,0,5,0"
-            BackgroundColor="#e9e9e9"
-            BorderColor="Transparent"
-            CornerRadius="10">
-            <DatePicker Date="{Binding DataNascimento}" Format="dd/MM/yyyy"/>
-         </Frame>
+        <StackLayout Spacing="10" Padding="10">
+            <Frame
+                Padding="5,0,5,0"
+                BackgroundColor="#e9e9e9"
+                BorderColor="Transparent"
+                CornerRadius="10">
+                <Entry
+                    PlaceholderColor="#999999"
+                    Placeholder="Nome"
+                    Text="{Binding Nome}"/>
+            </Frame>
+             <Frame
+                Padding="5,0,5,0"
+                BackgroundColor="#e9e9e9"
+                BorderColor="Transparent"
+                CornerRadius="10">
+                <Entry
+                    PlaceholderColor="#999999"
+                    Placeholder="Email"
+                    Text="{Binding Email}"/>
+             </Frame>
+             <Frame
+                Padding="5,0,5,0"
+                BackgroundColor="#e9e9e9"
+                BorderColor="Transparent"
+                CornerRadius="10">
+                <Entry
+                    PlaceholderColor="#999999"
+                    Placeholder="Responsável"
+                    Text="{Binding Responsavel}"/>
+             </Frame>
+             <Frame
+                Padding="5,0,5,0"
+                BackgroundColor="#e9e9e9"
+                BorderColor="Transparent"
+                CornerRadius="10">
+                <DatePicker Date="{Binding DataNascimento}" Format="dd/MM/yyyy"/>
+             </Frame>
 
-         <Label
-            HorizontalOptions="Center"
-            Text="Histórico médico"
-            FontAttributes="Bold">
-            <Label.Triggers>
-                <DataTrigger TargetType="Label" Binding="{Binding Patient.historico.Count}" Value="0">
-                    <Setter Property="IsVisible" Value="False" />
-                </DataTrigger>
-            </Label.Triggers>
-         </Label>
-         
-            <CollectionView
-                ItemsSource="{Binding Patient.historico}">
+             <Grid ColumnDefinitions="*,*">
+                 <Grid.GestureRecognizers>
+                     <ClickGestureRecognizer Command="{Binding AddHistóricoMedico}"/>
+                 </Grid.GestureRecognizers>
+                <Label
+                    Grid.ColumnSpan="2"
+                    FontSize="Large"
+                    Text="Histórico Médico"
+                    VerticalTextAlignment="Center"
+                    HorizontalOptions="Center"/>
+                <Button
+                    Grid.Column="1"
+                    Text="+"
+                    BackgroundColor="Transparent"
+                    TextColor="Black"
+                    HeightRequest="10"
+                    VerticalOptions="Center"
+                    HorizontalOptions="End"
+                    FontSize="Title"
+                    Command="{Binding AddHistoricoMedico}"/>
+              </Grid>
+        
+                <CollectionView
+                    VerticalScrollBarVisibility="Never"
+                    HeightRequest="350"
+                    ItemsSource="{Binding MedicalHistory}">
 
-                <CollectionView.EmptyView>
-                    <StackLayout>
-                        <Label HorizontalOptions="Center" Text="Não há histórico médico"/>
-                    </StackLayout>
-                </CollectionView.EmptyView>
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout ItemSpacing="10" Orientation="Vertical"/>
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <CollectionView.EmptyView>
                         <StackLayout>
-                            <Label
-                                TextColor="#999999"
-                                Text="{Binding data, StringFormat='Data: {0:dd/MM/yy}'}"/>
-                            <Label
-                                TextColor="Black"
-                                FontAttributes="Bold"
-                                Text="{Binding tipo}"/>
-                            <Label
-                                Text="{Binding texto}"/>
-
+                            <Label HorizontalOptions="Center" Text="Não há histórico médico"/>
                         </StackLayout>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="10" Orientation="Vertical"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView>
+                               <SwipeView.RightItems>
+                                   <SwipeItems Mode="Execute">
+                                       <SwipeItem
+                                           Text="Deletar"
+                                           Command="{Binding BindingContext.DeleteHistory, Source={x:Reference Name=DetailPage}}"
+                                           CommandParameter="{Binding .}"
+                                           BackgroundColor="PaleVioletRed"/>
+                                   </SwipeItems>
+                                   </SwipeView.RightItems>
+                                       <StackLayout BackgroundColor="White">
+                                           <Label
+                                               TextColor="#999999"
+                                               Text="{Binding data, StringFormat='Data: {0:dd/MM/yy}'}"/>
+                                           <Label
+                                               TextColor="Black"
+                                               FontAttributes="Bold"
+                                               Text="{Binding tipo}"/>
+                                           <Label
+                                               Text="{Binding texto}"/>
 
-                    </DataTemplate>
-
-                </CollectionView.ItemTemplate>
-
-            </CollectionView>
-        <Button
-            Text="Confirmar"
-            Command="{Binding ConfirmButton}"
-            FontAttributes="Bold"
-            VerticalOptions="EndAndExpand"/>
+                                       </StackLayout>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            <Button
+                Text="Confirmar"
+                Command="{Binding ConfirmButton}"
+                FontAttributes="Bold"
+                VerticalOptions="EndAndExpand"/>
        
-    </StackLayout>
+        </StackLayout>
 </ContentPage>
     

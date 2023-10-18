@@ -53,10 +53,11 @@ namespace Doc_Historico.Services
             return result;
         }
 
-        public async Task DeleteAsync(string uri)
+        public async Task<bool> DeleteAsync(string uri)
         {
             HttpClient httpClient = GetOrCreateHttpClient();
-            var result =await httpClient.DeleteAsync(uri);
+            var result = await httpClient.DeleteAsync(uri);
+            return result.IsSuccessStatusCode;
         }
 
         public async Task<TResult> PostAsync<TResult>(string uri, object patient = null)

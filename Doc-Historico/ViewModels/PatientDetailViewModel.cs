@@ -14,17 +14,22 @@ namespace Doc_Historico.ViewModels
 	{
 		private IPatient _patientService;
         private IMedicalHistory _medicalService;
-		private Patient _patient;
-		public Patient Patient
-		{
-			get => _patient;
-			set
-			{
-                _patient = value;
-				OnPropertyChanged(nameof(Patient));
-				OnPropertyChanged(nameof(Title));
-			}
-		}
+        private Patient _patient;
+        public Patient Patient
+        {
+            get => _patient;
+            set
+            {
+                if (_patient != value)
+                {
+                    _patient = value;
+                    OnPropertyChanged(nameof(Patient));
+                    InitializePatient();
+                    OnPropertyChanged(nameof(Title));
+                }
+            }
+        }
+
         private ObservableCollection<Historico> _medicalHistory;
         public ObservableCollection<Historico> MedicalHistory
         {
@@ -32,7 +37,7 @@ namespace Doc_Historico.ViewModels
             set
             {
                 _medicalHistory = value;
-                SetProperty(ref _medicalHistory, value);
+                OnPropertyChanged(nameof(MedicalHistory));
             }
         }
 
@@ -83,30 +88,64 @@ namespace Doc_Historico.ViewModels
             _patientService = patientService;
             _medicalService = medicalService;
             ConfirmButton = new Command(() => ConfirmButtonExecute());
-           
+            DeleteHistory = new Command<Historico>(async (historico) => await DeleteHistoryExecute(historico));
+            RefreshCommand = new Command(async () => await GetHistoricoExecute());
+            AddHistoricoMedico = new Command(async () => await AddHistoricoMedicoExecute());
+            MedicalHistory = new ObservableCollection<Historico>();
+
         }
 
-
-        protected override void OnPropertyChanged(string propertyName)
+        private async Task AddHistoricoMedicoExecute()
         {
-            base.OnPropertyChanged(propertyName);
+            string type = await Application.Current.MainPage.DisplayActionSheet("Tipo","Cancelar",null, "Sintoma", "Diagnostico", "Tratamento");
+            if (type == "Cancelar")
+                return;
+            string descrpt = await Application.Current.MainPage.DisplayPromptAsync("Descrição", "Mínimo 10 caract.");
+            if (!IsValid(descrpt))
+                return;
 
-            if (propertyName == nameof(Patient))
+            await _medicalService.AddHistoricoPatient(Patient.id, new Historico()
             {
-                InitializePatient();
-            }
+                tipo = type,
+                texto = descrpt,
+                data = DateTime.Now
+            });
+            await GetHistoricoExecute();
+        }
+        public bool IsValid(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return false;
+
+            return input.Trim().Length >= 10;
+        }
+
+        private async Task GetHistoricoExecute()
+        {
+            MedicalHistory = new ObservableCollection<Historico>(await _medicalService.GetAllPatientMedicalHistory(Patient.id));
+            OnPropertyChanged(nameof(MedicalHistory));
+        }
+
+        private async Task DeleteHistoryExecute(Historico historico)
+        {
+            var result = await _medicalService.DeleteHistorico(historico.id, Patient.id);
+
+            if (result)
+                MedicalHistory.Remove(historico);
         }
 
         private async void InitializePatient()
         {
             if(Patient != null)
             {
-                Patient.historico = await _medicalService.GetAllPatientMedicalHistory(Patient.id);
+                MedicalHistory = new ObservableCollection<Historico>(await _medicalService.GetAllPatientMedicalHistory(Patient.id));
+                OnPropertyChanged(nameof(MedicalHistory));
+                Patient.historico = MedicalHistory.ToList();
                 Nome = Patient.nome;
                 Email = Patient.email;
                 Responsavel = Patient.responsavel;
                 DataNascimento = Patient.dataNascimento;
-                MedicalHistory = new ObservableCollection<Historico>(Patient.historico);
+                
             }
         }
 
@@ -172,8 +211,12 @@ namespace Doc_Historico.ViewModels
             Responsavel = null;
             DataNascimento = DateTime.MinValue; 
             Patient = null;
+            MedicalHistory = null;
         }
 
+        public ICommand AddHistoricoMedico { get; private set; }
+        public ICommand RefreshCommand { get; private set; }
+        public ICommand DeleteHistory { get; private set; }
         public ICommand ConfirmButton {get;private set;}
 	}
 }

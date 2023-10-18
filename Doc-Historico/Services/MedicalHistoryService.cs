@@ -16,19 +16,20 @@ namespace Doc_Historico.Services
         public async Task<Historico>AddHistoricoPatient(string idUsuario, Historico historico)
         {
             UriBuilder builder = new UriBuilder(BaseUri.Instance.GetMedicalHistoryUri);
-            builder.Query += $"/{idUsuario}";
+            builder.Path += "/idPaciente";
+            builder.Query = $"idPaciente={idUsuario}";
             string uri = builder.ToString();
             var result = await _requestProvider.PostAsync<Historico>(uri, historico);
             return result;
         }
 
-        public async Task DeleteHistorico(string idHistorico, string idUsuario)
+        public async Task<bool> DeleteHistorico(string idHistorico, string idUsuario)
         {
             UriBuilder builder = new UriBuilder(BaseUri.Instance.GetMedicalHistoryUri);
             builder.Path += $"/{idUsuario}/{idHistorico}";
             string uri = builder.ToString();
-            await _requestProvider.DeleteAsync(uri);
-            return;
+            var result = await _requestProvider.DeleteAsync(uri);
+            return result;
         }
 
         public async Task<Historico> GetSingleHistoricoPatient(string idHistorico, string idUsuario)
