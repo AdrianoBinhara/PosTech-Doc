@@ -42,11 +42,55 @@
             CornerRadius="10">
             <DatePicker Date="{Binding DataNascimento}" Format="dd/MM/yyyy"/>
          </Frame>
+
+         <Label
+            HorizontalOptions="Center"
+            Text="Histórico médico"
+            FontAttributes="Bold">
+            <Label.Triggers>
+                <DataTrigger TargetType="Label" Binding="{Binding Patient.historico.Count}" Value="0">
+                    <Setter Property="IsVisible" Value="False" />
+                </DataTrigger>
+            </Label.Triggers>
+         </Label>
+         
+            <CollectionView
+                ItemsSource="{Binding Patient.historico}">
+
+                <CollectionView.EmptyView>
+                    <StackLayout>
+                        <Label HorizontalOptions="Center" Text="Não há histórico médico"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="10" Orientation="Vertical"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Label
+                                TextColor="#999999"
+                                Text="{Binding data, StringFormat='Data: {0:dd/MM/yy}'}"/>
+                            <Label
+                                TextColor="Black"
+                                FontAttributes="Bold"
+                                Text="{Binding tipo}"/>
+                            <Label
+                                Text="{Binding texto}"/>
+
+                        </StackLayout>
+
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
         <Button
             Text="Confirmar"
             Command="{Binding ConfirmButton}"
             FontAttributes="Bold"
             VerticalOptions="EndAndExpand"/>
+       
     </StackLayout>
 </ContentPage>
     

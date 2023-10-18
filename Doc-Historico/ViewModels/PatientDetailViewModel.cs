@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
@@ -12,7 +13,7 @@ namespace Doc_Historico.ViewModels
 	public class PatientDetailViewModel : BaseViewModel
 	{
 		private IPatient _patientService;
-
+        private IMedicalHistory _medicalService;
 		private Patient _patient;
 		public Patient Patient
 		{
@@ -24,6 +25,16 @@ namespace Doc_Historico.ViewModels
 				OnPropertyChanged(nameof(Title));
 			}
 		}
+        private ObservableCollection<Historico> _medicalHistory;
+        public ObservableCollection<Historico> MedicalHistory
+        {
+            get => _medicalHistory;
+            set
+            {
+                _medicalHistory = value;
+                SetProperty(ref _medicalHistory, value);
+            }
+        }
 
         private string _nome;
         public string Nome
@@ -34,6 +45,7 @@ namespace Doc_Historico.ViewModels
                 SetProperty(ref _nome, value);
             }
         }
+
         private string _email;
         public string Email
         {
@@ -65,12 +77,15 @@ namespace Doc_Historico.ViewModels
 
         public string Title => Patient != null ? "Editar" : "Adicionar";
 
-		public PatientDetailViewModel(INavigationService navigationService, IPatient patientService) : base(navigationService)
+		public PatientDetailViewModel(INavigationService navigationService, IPatient patientService, IMedicalHistory medicalService) : base(navigationService)
 		{
 			_navigationService = navigationService;
             _patientService = patientService;
+            _medicalService = medicalService;
             ConfirmButton = new Command(() => ConfirmButtonExecute());
-		}
+           
+        }
+
 
         protected override void OnPropertyChanged(string propertyName)
         {
@@ -78,19 +93,20 @@ namespace Doc_Historico.ViewModels
 
             if (propertyName == nameof(Patient))
             {
-                Initialize();
+                InitializePatient();
             }
         }
 
-        private void Initialize()
+        private async void InitializePatient()
         {
             if(Patient != null)
             {
+                Patient.historico = await _medicalService.GetAllPatientMedicalHistory(Patient.id);
                 Nome = Patient.nome;
                 Email = Patient.email;
                 Responsavel = Patient.responsavel;
                 DataNascimento = Patient.dataNascimento;
-                return;
+                MedicalHistory = new ObservableCollection<Historico>(Patient.historico);
             }
         }
 
