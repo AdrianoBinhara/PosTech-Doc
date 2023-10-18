@@ -13,6 +13,8 @@ namespace Doc_Historico.Helpers
         public string Uri { get; } = "http://127.0.0.1:5047";
 #endif
         public string GetPatientsUri => $"{Uri}/Patient";
+        public string GetMedicalHistoryUri => $"{Uri}/MedicalHistory";
+
 
         private BaseUri() { }
     }

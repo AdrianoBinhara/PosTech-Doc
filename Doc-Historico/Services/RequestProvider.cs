@@ -59,7 +59,7 @@ namespace Doc_Historico.Services
             var result =await httpClient.DeleteAsync(uri);
         }
 
-        public async Task<TResult> PostAsync<TResult>(string uri, Patient patient)
+        public async Task<TResult> PostAsync<TResult>(string uri, object patient = null)
         {
             HttpClient httpClient = GetOrCreateHttpClient();
 
@@ -75,7 +75,7 @@ namespace Doc_Historico.Services
             return result;
         }
 
-        public async Task<TResult> PutAsync<TResult>(string uri, Patient patient)
+        public async Task<TResult> PutAsync<TResult>(string uri, object patient)
         {
             HttpClient httpClient = GetOrCreateHttpClient();
 
